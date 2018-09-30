@@ -5,33 +5,48 @@ import List from './List.js';
 class Form extends Component {
   
   state = {
-    value: '',
+    userName: '',
+    firstName: '',
+    lastName: '',
     items: [],
+    error: false
   };
-
-  handleUsernameChange = event => {
-    // this.setState({ value: event.target.value });
-  };
-
+  
+  handleChange = event => {
+    const iFieldName = event.target.name;
+    this.setState({ 
+	  [iFieldName]: event.target.value
+    })
+    if (event.target.name === 'userName' && this.state.items.length > 0 && this.state.items.find(item => (item.userName === event.target.value))) {
+      this.setState({error: true})
+    } else {
+      this.setState({error: false})
+    }
+  }
+    
   addItem = event => {
     event.preventDefault();
     const newUser = {
-      userName: event.target['username'].value,
-      firstName: event.target['firstname'].value,
-	  lastName: event.target['lastname'].value
+      userName: event.target['userName'].value,
+      firstName: event.target['firstName'].value,
+	  lastName: event.target['lastName'].value
     };
     
     this.setState(oldState => ({
       items: [...oldState.items, newUser],
     }));
+    // Reset fields once user is saved
+    this.state.firstName = ''
+    this.state.lastName = ''
+    this.state.userName = ''
   };
 
   deleteLastItem = event => {
     this.setState(prevState => ({ items: this.state.items.slice(0, -1) }));
   };
 
-  inputIsEmpty = () => {
-    return this.state.value === '';
+  inputsAreEmpty = () => {
+    return (this.state.userName === '' || this.state.firtName === '' || this.state.lastName === '' || this.state.error);
   };
 
   noItemsFound = () => {
@@ -42,25 +57,33 @@ class Form extends Component {
   	return(
       <div>
       	<h2>Users List</h2>
+        {
+       	  this.state.error &&
+      	  <span className="error">User already exists! Please, try with different user name</span>  
+        }
         <form onSubmit={this.addItem}>
           <input
             type="text"
             placeholder="Enter first name"
-			name="firstname"
+    		value={this.state.firstName}
+			onChange={this.handleChange}
+			name="firstName"
           />
 		  <input
             type="text"
             placeholder="Enter last name"
-			name="lastname"
+    		value={this.state.lastName}
+			onChange={this.handleChange}
+			name="lastName"
           />
 	      <input
             type="text"
             placeholder="Enter user name"
-
-            onChange={this.handleUsernameChange}
-			name="username"
+    		value={this.state.userName}
+            onChange={this.handleChange}
+			name="userName"
           />
-          <Button disabled={this.inputIsEmpty()} text="Add"/>
+          <Button handleDisabled={this.inputsAreEmpty()} text="Add"/>
         </form>
 
         <Button handleClick={this.deleteLastItem} handleDisabled={this.noItemsFound()} text="Delete Last Item" />
