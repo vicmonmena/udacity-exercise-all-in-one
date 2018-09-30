@@ -29,16 +29,16 @@ class Form extends Component {
     const newUser = {
       userName: event.target['userName'].value,
       firstName: event.target['firstName'].value,
-	  lastName: event.target['lastName'].value
+	  lastName: event.target['lastName'].value,
+      numberOfGames: 0,
     };
     
     this.setState(oldState => ({
       items: [...oldState.items, newUser],
+      userName: '',
+	  firstName: '',
+	  lastName: ''
     }));
-    // Reset fields once user is saved
-    this.state.firstName = ''
-    this.state.lastName = ''
-    this.state.userName = ''
   };
 
   deleteLastItem = event => {
@@ -83,10 +83,8 @@ class Form extends Component {
             onChange={this.handleChange}
 			name="userName"
           />
-          <Button handleDisabled={this.inputsAreEmpty()} text="Add"/>
+          <Button handleDisabled={this.inputsAreEmpty()} text="+"/>
         </form>
-
-        <Button handleClick={this.deleteLastItem} handleDisabled={this.noItemsFound()} text="Delete Last Item" />
 
         <List items={this.state.items}/>
       </div>

@@ -6,7 +6,7 @@ const List = props => {
   if (props.items) {
     return(
       <div>
-        <p className="items">Items</p>
+        <p className="App-title">List of users</p>
         <ol className="item-list">
           {props.items.map((item, index) => <ListItem key={index} item={item}/>)}
         </ol>
